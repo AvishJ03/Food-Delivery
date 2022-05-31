@@ -1,16 +1,15 @@
 import React from "react";
 import Footer from "../../Components/Footer";
 import Navbar from "../../Components/Navbar";
-import Card from "./Card";
-import Deals from "./Deals";
-import Filters from "./Filters";
+import Find from "./Find";
+import HowToOrder from "./HowToOrder";
 
 const Home = () => {
   return (
     <div>
       <Navbar />
-      <Deals />
-      <Filters />
+      <Find />
+      <HowToOrder />
       <Footer />
     </div>
   );
