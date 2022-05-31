@@ -10,8 +10,15 @@ import {
   chakra,
   Image,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
+  const navigate = useNavigate();
+
+  function handleLogin(e) {
+    e.preventDefault();
+    navigate("/");
+  }
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -146,7 +153,9 @@ function SignUp() {
             Forgot password?
           </Text>
           <Flex mt="10" align="center" justifyContent="center">
-            <Text>Already have an account? &nbsp;</Text>
+            <Text cursor="pointer" onClick={handleLogin}>
+              Already have an account? &nbsp;
+            </Text>
             <Text color="#4E60FF">Log In!</Text>
           </Flex>
         </chakra.form>

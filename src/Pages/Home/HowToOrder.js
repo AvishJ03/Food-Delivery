@@ -5,7 +5,9 @@ const HowToOrder = () => {
   return (
     <VStack mb="20" w="100vw" overflow="hidden">
       <Heading>How To Order?</Heading>
-      <Text my="10" fontSize="lg">Follow the steps</Text>
+      <Text my="10" fontSize="lg">
+        Follow the steps
+      </Text>
       <HStack spacing="20">
         <VStack>
           <Image w="20" src="/images/hto/loc.gif" alt="loc" />

@@ -21,6 +21,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { db, auth } from "../../utils/init-firebase";
 import Navbar from "../../Components/Navbar";
 import Footer from "../../Components/Footer";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   const [item1, setItem1] = useState(0);
@@ -54,6 +55,12 @@ const Checkout = () => {
     getItems();
   }, []);
 
+  const navigate = useNavigate();
+
+  function handlePlaced(e) {
+    e.preventDefault();
+    navigate("/placed");
+  }
   function handleItem1(e) {
     e.preventDefault();
     setItem1(item1 + 1);
@@ -226,7 +233,14 @@ const Checkout = () => {
             </HStack>
           )}
         </VStack>
-        <VStack border="2px solid #4E60FF" borderRadius="20" spacing="3" align="flex-start" p="8" bgColor="#F3F4FF">
+        <VStack
+          border="2px solid #4E60FF"
+          borderRadius="20"
+          spacing="3"
+          align="flex-start"
+          p="8"
+          bgColor="#F3F4FF"
+        >
           <Heading textAlign="center">Payment Details</Heading>
           <Text>Complete your purchase by providing your payment details.</Text>
           <Text>Card Number</Text>
@@ -240,20 +254,29 @@ const Checkout = () => {
           <Text>CardHolder Name</Text>
           <Input type="text" placeholder="Enter your name" />
           <HStack spacing="80">
-              <VStack align="flex-start">
-                  <Text>Subtotal</Text>
-                  <Text>Tax (8%)</Text>
-                  <Text>Delivery (Free Delivery)</Text>
-                  <Text fontWeight="bold">Total</Text>
-              </VStack>
-              <VStack align="flex-end">
-                  <Text>Rs. {total}</Text>
-                  <Text>Rs. {total*8/100}</Text>
-                  <Text>Rs. 0</Text>
-                  <Text fontWeight="bold">Rs. {total + total*8/100}</Text>
-              </VStack>
+            <VStack align="flex-start">
+              <Text>Subtotal</Text>
+              <Text>Tax (8%)</Text>
+              <Text>Delivery (Free Delivery)</Text>
+              <Text fontWeight="bold">Total</Text>
+            </VStack>
+            <VStack align="flex-end">
+              <Text>Rs. {total}</Text>
+              <Text>Rs. {(total * 8) / 100}</Text>
+              <Text>Rs. 0</Text>
+              <Text fontWeight="bold">Rs. {total + (total * 8) / 100}</Text>
+            </VStack>
           </HStack>
-          <Button px="8" py="6" alignSelf="center" bgColor="#7b8ef4" color="white">Pay Rs. {total + total*8/100}</Button>
+          <Button
+            onClick={handlePlaced}
+            px="8"
+            py="6"
+            alignSelf="center"
+            bgColor="#7b8ef4"
+            color="white"
+          >
+            Pay Rs. {total + (total * 8) / 100}
+          </Button>
         </VStack>
       </HStack>
       <Footer />

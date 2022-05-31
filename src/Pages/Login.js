@@ -26,6 +26,10 @@ const Login = () => {
   function handlePassword(e) {
     setPassword(e.target.value);
   }
+  function handleSignUp(e) {
+    e.preventDefault();
+    navigate("/signup");
+  }
 
   const log = async (e) => {
     e.preventDefault();
@@ -122,7 +126,9 @@ const Login = () => {
           </Text>
           <Flex mt="20" align="center" justifyContent="center">
             <Text>Don't have an account? &nbsp;</Text>
-            <Text color="#4E60FF">Sign Up!</Text>
+            <Text cursor="pointer" onClick={handleSignUp} color="#4E60FF">
+              Sign Up!
+            </Text>
           </Flex>
         </chakra.form>
       </Box>

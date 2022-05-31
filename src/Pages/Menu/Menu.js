@@ -13,7 +13,6 @@ import Navbar from "../../Components/Navbar";
 import { addDoc, collection } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { db } from "../../utils/init-firebase";
-import { useAuth } from "../../contexts/AuthContext";
 import RestCard from "../../Components/RestCard";
 
 const Menu = () => {
@@ -24,7 +23,6 @@ const Menu = () => {
   const [total, setTotal] = useState(0);
 
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
 
   const orderCollectionRef = collection(db, "orders");
   const checkout = async (e) => {
@@ -42,7 +40,7 @@ const Menu = () => {
           price[3] * item4
       ),
     });
-    navigate("/home");
+    navigate("/check");
   };
 
   const items = ["Veg Burger", "Cheese Burger", "Veg Pizza", "American Pizza"];

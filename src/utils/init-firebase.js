@@ -1,4 +1,3 @@
-
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
@@ -9,7 +8,7 @@ const firebaseConfig = {
   projectId: "food-delivery-96570",
   storageBucket: "food-delivery-96570.appspot.com",
   messagingSenderId: "432017649732",
-  appId: "1:432017649732:web:f427064fab2c04cc8acc11"
+  appId: "1:432017649732:web:f427064fab2c04cc8acc11",
 };
 
 const app = initializeApp(firebaseConfig);
