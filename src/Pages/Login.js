@@ -10,11 +10,36 @@ import {
   chakra,
   Image,
 } from "@chakra-ui/react";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login, currentUser } = useAuth();
   const [isSubmiting, setIsSubmiting] = useState(false);
+  const navigate = useNavigate();
+
+  function handleEmail(e) {
+    setEmail(e.target.value);
+  }
+  function handlePassword(e) {
+    setPassword(e.target.value);
+  }
+
+  const log = async (e) => {
+    e.preventDefault();
+    // your login logic here
+    if (!email || !password) {
+      console.log("Please enter email and password");
+    }
+    setIsSubmiting(true);
+    login(email, password);
+    {
+      currentUser && navigate("/home");
+    }
+    console.log(currentUser);
+  };
 
   return (
     <HStack align="center" spacing="400">
@@ -29,43 +54,7 @@ const Login = () => {
         backgroundColor="white"
         //   display={loginin ? "block" : "none"}
       >
-        <chakra.form
-        // onSubmit={async (e) => {
-        //   e.preventDefault();
-        //   // your login logic here
-        //   if (!email || !password) {
-        //     toast({
-        //       description: "Credentials not valid",
-        //       status: "error",
-        //       duration: 5000,
-        //       isClosable: true,
-        //     });
-        //     console.log("Please enter email and password");
-        //   }
-        //   setIsSubmiting(true);
-        //   login(email, password)
-        //     .then((response) => {
-        //       console.log(response);
-        //       toast({
-        //         description: "Login Successful",
-        //         status: "success",
-        //         duration: 5000,
-        //         isClosable: true,
-        //       });
-        //       navigate("/");
-        //     })
-        //     .catch((error) => {
-        //       console.log(error);
-        //       toast({
-        //         description: error.message,
-        //         status: "error",
-        //         duration: 5000,
-        //         isClosable: true,
-        //       });
-        //     })
-        //     .finally(() => mounted.current && setIsSubmiting(false));
-        // }}
-        >
+        <chakra.form onSubmit={log}>
           <Flex
             justifyContent="flex-start"
             p="4"
@@ -86,7 +75,7 @@ const Login = () => {
           </Text>
           <Flex justifyContent="space-around" mx="10" my="4" mb="10"></Flex>
           <Box>
-            <Text textAlign="left" mx="16" my="3">
+            <Text onChange={handleEmail} textAlign="left" mx="16" my="3">
               Email
             </Text>
             <Input
@@ -99,7 +88,7 @@ const Login = () => {
               required
               onChange={(e) => setEmail(e.target.value)}
             />
-            <Text textAlign="left" mx="16" my="3">
+            <Text onChange={handlePassword} textAlign="left" mx="16" my="3">
               Password
             </Text>
             <Input
@@ -113,7 +102,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </Box>
-          <Checkbox mr="125px" my="3" colorScheme="#4E60FF" defaultIsChecked>
+          <Checkbox mr="125px" my="3" colorScheme="#4E60FF">
             Remember Me
           </Checkbox>
           <br />

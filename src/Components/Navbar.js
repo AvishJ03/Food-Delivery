@@ -31,13 +31,6 @@ const Navbar = () => {
           Deals
         </Button>
         <Button
-          _hover={{ color: "#7b8ef4", textDecoration: "underline" }}
-          colorScheme="black"
-          variant="link"
-        >
-          My Orders
-        </Button>
-        <Button
           color="#7b8ef4"
           p="3"
           backgroundColor="#F3F4FF"

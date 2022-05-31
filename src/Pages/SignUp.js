@@ -127,7 +127,7 @@ function SignUp() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </Box>
-          <Checkbox mr="175px" my="3" colorScheme="#4E60FF" defaultIsChecked>
+          <Checkbox mr="175px" my="3" colorScheme="#4E60FF">
             Remember Me
           </Checkbox>
           <br />

@@ -10,6 +10,11 @@ import {
 import React, { useState } from "react";
 import Footer from "../../Components/Footer";
 import Navbar from "../../Components/Navbar";
+import { addDoc, collection } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { db } from "../../utils/init-firebase";
+import { useAuth } from "../../contexts/AuthContext";
+import RestCard from "../../Components/RestCard";
 
 const Menu = () => {
   const [item1, setItem1] = useState(0);
@@ -17,6 +22,28 @@ const Menu = () => {
   const [item3, setItem3] = useState(0);
   const [item4, setItem4] = useState(0);
   const [total, setTotal] = useState(0);
+
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
+
+  const orderCollectionRef = collection(db, "orders");
+  const checkout = async (e) => {
+    e.preventDefault();
+    await addDoc(orderCollectionRef, {
+      user_id: parseInt(1),
+      item1: parseInt(item1),
+      item2: parseInt(item2),
+      item3: parseInt(item3),
+      item4: parseInt(item4),
+      total: parseInt(
+        price[0] * item1 +
+          price[1] * item2 +
+          price[2] * item3 +
+          price[3] * item4
+      ),
+    });
+    navigate("/home");
+  };
 
   const items = ["Veg Burger", "Cheese Burger", "Veg Pizza", "American Pizza"];
   const price = [150, 200, 250, 300];
@@ -45,7 +72,8 @@ const Menu = () => {
   return (
     <>
       <Navbar />
-      <HStack>
+      <RestCard />
+      <HStack my="5">
         <VStack>
           <Box mx="100" my="3">
             <Text mx="300" fontSize="xl" fontWeight="bold" textAlign="left">
@@ -241,7 +269,11 @@ const Menu = () => {
                 price[3] * item4}
             </Text>
           </HStack>
-          {(item1 || item2 || item3 || item4) && <Button bgColor="#7b8ef4" color="white">Checkout</Button>}
+          {(item1 || item2 || item3 || item4) && (
+            <Button onClick={checkout} bgColor="#7b8ef4" color="white">
+              Checkout
+            </Button>
+          )}
         </VStack>
       </HStack>
       <Footer />
