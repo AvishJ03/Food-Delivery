@@ -46,7 +46,6 @@ const Navbar = () => {
           borderRadius="10"
         >
           <FiShoppingBag size="20" />
-          (0)
         </Button>
         <Button
           _hover={{ color: "#7b8ef4", textDecoration: "underline" }}
