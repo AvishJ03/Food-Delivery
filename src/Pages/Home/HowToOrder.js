@@ -3,7 +3,7 @@ import React from "react";
 
 const HowToOrder = () => {
   return (
-    <VStack mb="20" w="100vw" overflow="hidden">
+    <VStack mb="20" w="99vw" overflow="hidden">
       <Heading>How To Order?</Heading>
       <Text my="10" fontSize="lg">
         Follow the steps

@@ -6,274 +6,189 @@ import {
   Box,
   Button,
   Heading,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "../../Components/Footer";
 import Navbar from "../../Components/Navbar";
 import { addDoc, collection } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { db } from "../../utils/init-firebase";
 import RestCard from "../../Components/RestCard";
+import menu from "../../pc.json";
 
 const Menu = () => {
-  const [item1, setItem1] = useState(0);
-  const [item2, setItem2] = useState(0);
-  const [item3, setItem3] = useState(0);
-  const [item4, setItem4] = useState(0);
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState(null);
+  const [itemname, setItemname] = useState("");
+
+  const [menus, setMenus] = useState({});
+  const [counts, setCounts] = useState({});
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    let temp = menus;
+    let tempCounts = counts;
+    menu.map((item) => {
+      if (!(item.menu in temp)) {
+        temp = { ...temp, [item.menu]: [item] };
+        tempCounts = { ...tempCounts, [item.menu]: [0] };
+      } else {
+        temp = { ...temp, [item.menu]: [...temp[item.menu], item] };
+        tempCounts = {
+          ...tempCounts,
+          [item.menu]: [...tempCounts[item.menu], 0],
+        };
+      }
+    });
+    setMenus(temp);
+    setCounts(tempCounts);
+  }, [menu]);
+
   const orderCollectionRef = collection(db, "orders");
+
   const checkout = async (e) => {
     e.preventDefault();
     await addDoc(orderCollectionRef, {
       user_id: parseInt(1),
-      item1: parseInt(item1),
-      item2: parseInt(item2),
-      item3: parseInt(item3),
-      item4: parseInt(item4),
-      total: parseInt(
-        price[0] * item1 +
-          price[1] * item2 +
-          price[2] * item3 +
-          price[3] * item4
-      ),
+      order: total,
     });
     navigate("/check");
   };
 
-  const items = ["Veg Burger", "Cheese Burger", "Veg Pizza", "American Pizza"];
-  const price = [150, 200, 250, 300];
-
-  function handleItem1(e) {
-    e.preventDefault();
-    setItem1(item1 + 1);
-    setTotal(item1 + item2 + item3 + item4 + 1);
-  }
-  function handleItem2(e) {
-    e.preventDefault();
-    setItem2(item2 + 1);
-    setTotal(item1 + item2 + item3 + item4 + 1);
-  }
-  function handleItem3(e) {
-    e.preventDefault();
-    setItem3(item3 + 1);
-    setTotal(item1 + item2 + item3 + item4 + 1);
-  }
-  function handleItem4(e) {
-    e.preventDefault();
-    setItem4(item4 + 1);
-    setTotal(item1 + item2 + item3 + item4 + 1);
-  }
+  const setCount = async (item, idx, inc) => {
+    if (inc) {
+      let temp = counts;
+      temp[item][idx] += 1;
+      setCounts(temp);
+    } else {
+      let temp = counts;
+      temp[item][idx] -= 1;
+      setCounts(temp);
+    }
+    let res = [];
+    Object.keys(counts).map((ele) => {
+      let t = menus[ele];
+      t.map((item, idx) => {
+        if (counts[ele][idx] == 0) return;
+        let obj = {
+          name: item.item,
+          price: item.price,
+          count: counts[ele][idx],
+        };
+        res.push(obj);
+      });
+    });
+    console.log(res);
+    setTotal(res);
+  };
 
   return (
     <>
       <Navbar />
       <RestCard />
-      <HStack my="5">
-        <VStack>
-          <Box mx="100" my="3">
-            <Text mx="300" fontSize="xl" fontWeight="bold" textAlign="left">
-              Burgers
-            </Text>
-            <br />
-            <VStack>
-              <HStack
-                p="5"
-                borderRadius="20"
-                border="2px solid #7b8ef4"
-                spacing="10"
-              >
-                <Image w="40" src="/images/menu1.gif" />
-                <Box>
-                  <Text fontSize="xl" fontWeight="bold" textAlign="left">
-                    Veg Burger
-                  </Text>
-                  <Text textAlign="left">
-                    lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Text>
-                  <Text fontSize="xl" fontWeight="bold" textAlign="left">
-                    Rs. 150
+      <Text fontSize="5xl" fontWeight="bold" textAlign="center" my="10">
+        Menu
+      </Text>
+      <HStack my="5" align="flex-start" justify="center" spacing="40">
+        <VStack ml="150px">
+          {Object.keys(menus).length !== 0 &&
+            Object.keys(menus).map((item) => {
+              return (
+                <Box
+                  bgColor={itemname == item ? "gray.500" : "gray.300"}
+                  w="100%"
+                  textAlign="center"
+                  px="200px"
+                  py="20px"
+                  cursor="pointer"
+                  onClick={(e) => setItemname(item)}
+                >
+                  <Text fontWeight="bold" fontSize="2xl">
+                    {item}
                   </Text>
                 </Box>
-                {item1 ? (
-                  <HStack>
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setItem1(item1 - 1);
-                        setTotal(total - 1);
-                      }}
-                    >
-                      -
-                    </Button>
-                    <Text>{item1}</Text>
-                    <Button onClick={handleItem1}>+</Button>
-                  </HStack>
-                ) : (
-                  <Button onClick={handleItem1}>Add</Button>
-                )}
-              </HStack>
-              <HStack
-                p="5"
-                borderRadius="20"
-                border="2px solid #7b8ef4"
-                spacing="10"
-              >
-                <Image w="40" src="/images/menu1.gif" />
-                <Box>
-                  <Text fontSize="xl" fontWeight="bold" textAlign="left">
-                    Cheese Burger
-                  </Text>
-                  <Text textAlign="left">
-                    lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Text>
-                  <Text fontSize="xl" fontWeight="bold" textAlign="left">
-                    Rs. 200
-                  </Text>
-                </Box>
-                {item2 ? (
-                  <HStack>
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setItem2(item2 - 1);
-                        setTotal(total - 1);
-                      }}
-                    >
-                      -
-                    </Button>
-                    <Text>{item2}</Text>
-                    <Button onClick={handleItem2}>+</Button>
-                  </HStack>
-                ) : (
-                  <Button onClick={handleItem2}>Add</Button>
-                )}
-              </HStack>
-            </VStack>
-          </Box>
-          <Box mx="100" my="3">
-            <Text mx="300" fontSize="xl" fontWeight="bold" textAlign="left">
-              Pizzas
-            </Text>
-            <br />
-            <VStack>
-              <HStack
-                p="5"
-                borderRadius="20"
-                border="2px solid #7b8ef4"
-                spacing="10"
-              >
-                <Image w="40" src="/images/menu2.gif" />
-                <Box>
-                  <Text fontSize="xl" fontWeight="bold" textAlign="left">
-                    Veg Pizza
-                  </Text>
-                  <Text textAlign="left">
-                    lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Text>
-                  <Text fontSize="xl" fontWeight="bold" textAlign="left">
-                    Rs. 250
-                  </Text>
-                </Box>
-                {item3 ? (
-                  <HStack>
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setItem3(item3 - 1);
-                        setTotal(total - 1);
-                      }}
-                    >
-                      -
-                    </Button>
-                    <Text>{item3}</Text>
-                    <Button onClick={handleItem3}>+</Button>
-                  </HStack>
-                ) : (
-                  <Button onClick={handleItem3}>Add</Button>
-                )}
-              </HStack>
-              <HStack
-                p="5"
-                borderRadius="20"
-                border="2px solid #7b8ef4"
-                spacing="10"
-              >
-                <Image w="40" src="/images/menu2.gif" />
-                <Box>
-                  <Text fontSize="xl" fontWeight="bold" textAlign="left">
-                    Mexican Pizza
-                  </Text>
-                  <Text textAlign="left">
-                    lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </Text>
-                  <Text fontSize="xl" fontWeight="bold" textAlign="left">
-                    Rs. 300
-                  </Text>
-                </Box>
-                {item4 ? (
-                  <HStack>
-                    <Button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setItem4(item4 - 1);
-                        setTotal(total - 1);
-                      }}
-                    >
-                      -
-                    </Button>
-                    <Text>{item4}</Text>
-                    <Button onClick={handleItem4}>+</Button>
-                  </HStack>
-                ) : (
-                  <Button onClick={handleItem4}>Add</Button>
-                )}
-              </HStack>
-            </VStack>
-          </Box>
+              );
+            })}
         </VStack>
-        <VStack p="100" bgColor="#F3F4FF" borderRadius="20">
-          <Heading>Cart</Heading>
-          <Text>{total} items</Text>
-          {item1 && (
-            <Text>
-              {items[0]} - x{item1} - Rs. {price[0] * item1}
-            </Text>
-          )}
-          {item2 && (
-            <Text>
-              {items[1]} - x{item2} - Rs. {price[1] * item2}
-            </Text>
-          )}
-          {item3 && (
-            <Text>
-              {items[2]} - x{item3} - Rs. {price[2] * item3}
-            </Text>
-          )}
-          {item4 && (
-            <Text>
-              {items[3]} - x{item4} - Rs. {price[3] * item4}
-            </Text>
-          )}
-          <HStack>
-            <Text>Subtotal</Text>
-            <Text>
-              Rs.{" "}
-              {price[0] * item1 +
-                price[1] * item2 +
-                price[2] * item3 +
-                price[3] * item4}
-            </Text>
-          </HStack>
-          {(item1 || item2 || item3 || item4) && (
-            <Button onClick={checkout} bgColor="#7b8ef4" color="white">
-              Checkout
-            </Button>
+
+        <VStack>
+          {itemname !== "" && (
+            <VStack>
+              {menus[itemname].map((item2, idx) => {
+                return (
+                  <HStack
+                    p="5"
+                    borderRadius="20"
+                    border="2px solid #7b8ef4"
+                    spacing="10"
+                  >
+                    <Image w="40" src="/images/menu1.gif" />
+                    <Box>
+                      <Text fontSize="xl" fontWeight="bold" textAlign="left">
+                        {item2.item}
+                      </Text>
+                      <Text textAlign="left">
+                        lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                      </Text>
+                      <Text fontSize="xl" fontWeight="bold" textAlign="left">
+                        Rs. 150
+                      </Text>
+                    </Box>
+                    {counts[itemname][idx] ? (
+                      <HStack>
+                        <Button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setCount(itemname, idx, false);
+                          }}
+                        >
+                          -
+                        </Button>
+                        <Text>{counts[itemname][idx]}</Text>
+                        <Button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setCount(itemname, idx, true);
+                          }}
+                        >
+                          +
+                        </Button>
+                      </HStack>
+                    ) : (
+                      <Button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCount(itemname, idx, true);
+                        }}
+                      >
+                        Add
+                      </Button>
+                    )}
+                  </HStack>
+                );
+              })}
+            </VStack>
           )}
         </VStack>
       </HStack>
+      {itemname !== "" && (
+        <Button
+          onClick={(e) => {
+            checkout(e);
+          }}
+          px="20"
+          py="7"
+          color="white"
+          backgroundColor="#7b8ef4"
+          display="flex"
+          mx="auto"
+          my="5"
+        >
+          Checkout
+        </Button>
+      )}
       <Footer />
     </>
   );

@@ -1,4 +1,13 @@
-import { Heading, Image, HStack, Button, VStack, Box, Input, Text } from "@chakra-ui/react";
+import {
+  Heading,
+  Image,
+  HStack,
+  Button,
+  VStack,
+  Box,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../../Components/Footer";
@@ -14,8 +23,10 @@ const Placed = () => {
   return (
     <>
       <Navbar />
-      <Heading mt="5" textAlign="center">Order Placed!🎉 </Heading>
-      <HStack>
+      <Heading mt="5" textAlign="center">
+        Order Placed!🎉{" "}
+      </Heading>
+      <HStack justify="center">
         <Image src="/images/delivery.gif" />
         <VStack>
           <HStack spacing="10">
@@ -39,9 +50,7 @@ const Placed = () => {
             </Box>
           </HStack>
           <Text color="#4E60FF">Default Address</Text>
-          <Input
-            value="2101, Mehta Heights, Sadashiv Lane, Charni Road"
-          />
+          <Input value="2101, Mehta Heights, Sadashiv Lane, Charni Road" />
           <Heading>Your order will be arriving in 30 mins.</Heading>
           <Button
             color="white"

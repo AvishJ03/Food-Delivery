@@ -11,7 +11,7 @@ const Footer = () => {
   return (
     <Box backgroundColor="#F3F4FF">
       <VStack>
-        <HStack my="10" w="100vw" justifyContent="space-evenly">
+        <HStack my="10" w="99vw" justifyContent="space-evenly">
           <VStack>
             <Image src="/images/logo.svg" alt="logo" />
             <Text fontWeight="bold" textAlign="left" color="blackAlpha.500">
